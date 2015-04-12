@@ -1,7 +1,6 @@
 (function() {
-  var Widget;
 
-  Widget = (function() {
+  window.Widget = (function() {
 
     function Widget(id, version) {
       this.id = id;

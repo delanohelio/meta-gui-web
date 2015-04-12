@@ -4,9 +4,8 @@ class ListingTable extends EntitySetWidget
 		@drawTable(entityType, entites, view)
 
 	drawTable: (entityType, entites, view) ->
-		@page = view
 		table = $("<table>")
-		@page.append table
+		view.append table
 		@buildTableHead(entityType.properties, table);
 		@buildTableBody(entityType.properties, entites, table)
 

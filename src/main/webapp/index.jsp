@@ -6,7 +6,17 @@
 	<title>LOM</title>
 
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="js/RederingEngine.js" type="text/javascript"></script>
+	<script src="js/engine/simpleStorage.js" type="text/javascript"></script>
+	<script src="js/engine/RootRenderer.js" type="text/javascript"></script>
+	<script src="js/engine/View.js" type="text/javascript"></script>
+	<script src="js/engine/WidgetManager.js" type="text/javascript"></script>
+	<script src="js/engine/DataManager.js" type="text/javascript"></script>
+	<script src="js/engine/RulesManager.js" type="text/javascript"></script>
+	<script src="js/engine/RederingEngine.js" type="text/javascript"></script>
+	
+	<script src="js/api/Widget.js" type="text/javascript"></script>
+	<script src="js/api/EntitySetWidget.js" type="text/javascript"></script>
+
 </head>
 <body>
 </body>
