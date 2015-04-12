@@ -24,7 +24,7 @@
       tr.attr("id", "entity_" + entity.name);
       table.append(tr);
       return tr.click(function() {
-        return RederingEngine.entityEvent(View.emptyPage(), entity, 'root');
+        return RederingEngine.peformContext(View.emptyPage(), entity, 'root');
       });
     };
 

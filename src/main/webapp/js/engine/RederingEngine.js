@@ -1,5 +1,7 @@
 (function() {
 
+  window.HOST = 'http://localhost:8081/';
+
   window.RederingEngine = {};
 
   RederingEngine.downloadWidgets = function() {
@@ -19,17 +21,24 @@
   RederingEngine.openApp = function(view) {
     var _this = this;
     return WidgetManager.getRootRenderer(function(rootRenderer) {
-      return DataManager.getAllEntities(function(allEntities) {
-        return rootRenderer.render(view, allEntities);
+      return DataManager.getAllEntitiesTypes(function(allEntitiesTypes) {
+        return rootRenderer.render(view, allEntitiesTypes);
       });
     });
   };
 
-  RederingEngine.entityEvent = function(view, entity, context) {
-    var rule, widget;
+  RederingEngine.peformContext = function(view, entityType, context) {
+    var rule, widget,
+      _this = this;
     rule = RulesManager.getRule(context);
     widget = eval(rule.widget.code);
-    return widget.render(view, entity, [], null);
+    if (rule.providedContext.type === "EntitySet") {
+      return DataManager.getEntityType(entityType.id, function(entityTypeFull) {
+        return DataManager.getEntities(entityTypeFull.resource, function(instances) {
+          return widget.render(view, entityTypeFull, instances, rule.configuration);
+        });
+      });
+    }
   };
 
   $(function() {

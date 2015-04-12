@@ -1,3 +1,4 @@
+window.HOST = 'http://localhost:8081/'
 window.RederingEngine = {}
 
 RederingEngine.downloadWidgets = () ->
@@ -10,13 +11,16 @@ RederingEngine.loadData = (url, callback) ->
 
 RederingEngine.openApp = (view) ->
 	WidgetManager.getRootRenderer (rootRenderer) =>
-		DataManager.getAllEntities (allEntities) =>
-			rootRenderer.render view, allEntities
+		DataManager.getAllEntitiesTypes (allEntitiesTypes) =>
+			rootRenderer.render view, allEntitiesTypes
 
-RederingEngine.entityEvent = (view, entity, context) ->
+RederingEngine.peformContext = (view, entityType, context) ->
 	rule = RulesManager.getRule(context)
 	widget = eval rule.widget.code
-	widget.render view, entity, [], null
+	if(rule.providedContext.type == "EntitySet")
+		DataManager.getEntityType entityType.id, (entityTypeFull) =>
+			DataManager.getEntities entityTypeFull.resource, (instances) =>
+				widget.render view, entityTypeFull, instances, rule.configuration
 
 $ -> 
 	RulesManager.downloadAllRules()

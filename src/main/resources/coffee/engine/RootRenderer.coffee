@@ -14,5 +14,5 @@ class window.RootRenderer
 		tr.attr "id", "entity_" + entity.name
 		table.append tr
 		tr.click =>
-			RederingEngine.entityEvent View.emptyPage(), entity, 'root'
+			RederingEngine.peformContext View.emptyPage(), entity, 'root'
 
