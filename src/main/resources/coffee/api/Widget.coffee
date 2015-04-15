@@ -1,3 +1,3 @@
 class window.Widget
 
-	constructor: (@id, @version) ->
+	constructor: (@id, @version, @configuration) ->

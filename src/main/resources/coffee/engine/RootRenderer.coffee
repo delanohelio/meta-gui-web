@@ -6,13 +6,16 @@ class window.RootRenderer
 		th = $("<tr><th>Entities</th></tr>")
 		th.attr "id", "entities"
 		table.append th
-		entitesType.forEach (entity) =>
-			@drawLine(table, entity)
+		entitesType.forEach (entityType) =>
+			@drawLine(table, entityType)
 
-	drawLine: (table, entity) ->
-		tr = $("<tr><td>#{entity.name}</td></tr>")
-		tr.attr "id", "entity_" + entity.name
+	drawLine: (table, entityType) ->
+		tr = $("<tr><td>#{entityType.name}</td></tr>")
+		tr.attr "id", "entityType_" + entityType.name
 		table.append tr
 		tr.click =>
-			RederingEngine.peformContext View.emptyPage(), entity, 'root'
+			widget = RederingEngine.getWidget entityType, null, 'root'
+			DataManager.getEntityType entityType.id, (entityTypeFull) =>
+				DataManager.getEntities entityTypeFull.resource, (entities) =>
+					widget.render View.emptyPage(), entityTypeFull, entities
 

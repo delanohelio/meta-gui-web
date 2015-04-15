@@ -14,13 +14,10 @@ RederingEngine.openApp = (view) ->
 		DataManager.getAllEntitiesTypes (allEntitiesTypes) =>
 			rootRenderer.render view, allEntitiesTypes
 
-RederingEngine.peformContext = (view, entityType, context) ->
-	rule = RulesManager.getRule(context)
+RederingEngine.getWidget = (entityType, propertyTypeType, context) ->
+	rule = RulesManager.getRule(context, propertyTypeType)
 	widget = eval rule.widget.code
-	if(rule.providedContext.type == "EntitySet")
-		DataManager.getEntityType entityType.id, (entityTypeFull) =>
-			DataManager.getEntities entityTypeFull.resource, (instances) =>
-				widget.render view, entityTypeFull, instances, rule.configuration
+	widget
 
 $ -> 
 	RulesManager.downloadAllRules()

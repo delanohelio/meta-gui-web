@@ -10,7 +10,7 @@
       return EntitySetWidget.__super__.constructor.apply(this, arguments);
     }
 
-    EntitySetWidget.prototype.render = function(view, entityType, entites, conf) {};
+    EntitySetWidget.prototype.render = function(view, entityType, entities) {};
 
     return EntitySetWidget;
 

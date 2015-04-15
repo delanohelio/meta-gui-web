@@ -27,18 +27,11 @@
     });
   };
 
-  RederingEngine.peformContext = function(view, entityType, context) {
-    var rule, widget,
-      _this = this;
-    rule = RulesManager.getRule(context);
+  RederingEngine.getWidget = function(entityType, propertyTypeType, context) {
+    var rule, widget;
+    rule = RulesManager.getRule(context, propertyTypeType);
     widget = eval(rule.widget.code);
-    if (rule.providedContext.type === "EntitySet") {
-      return DataManager.getEntityType(entityType.id, function(entityTypeFull) {
-        return DataManager.getEntities(entityTypeFull.resource, function(instances) {
-          return widget.render(view, entityTypeFull, instances, rule.configuration);
-        });
-      });
-    }
+    return widget;
   };
 
   $(function() {

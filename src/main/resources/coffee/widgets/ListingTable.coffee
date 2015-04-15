@@ -1,16 +1,16 @@
 class ListingTable extends EntitySetWidget
 
-	render: (view, entityType, entites, configuration) ->
-		@drawTable(entityType, entites, view)
+	render: (view, entityType, entities) ->
+		@drawTable(entityType, entities, view)
 
-	drawTable: (entityType, entites, view) ->
+	drawTable: (entityType, entities, view) ->
 		title = $("<h2>")
 		title.append entityType.name
 		view.append title 
-		table = $("<table>")
-		view.append table
-		@buildTableHead(entityType.properties, table);
-		@buildTableBody(entityType, entites, table)
+		@table = $("<table>")
+		view.append @table
+		@buildTableHead(entityType.propertiesType, @table);
+		@buildTableBody(entityType, entities, @table)
 
 	buildTableHead: (properties, table) ->
 		thead = $("<thead>");
@@ -22,12 +22,12 @@ class ListingTable extends EntitySetWidget
 			thHead = $("<th>#{property.name}</th>")
 			trHead.append thHead
 
-	buildTableBody: (entityType, entites, table) ->
-		if(entites.length > 0)
+	buildTableBody: (entityType, entities, table) ->
+		if(entities.length > 0)
 			tbody = $("<tbody>");
 			tbody.attr "id", "instances"
 			table.append tbody
-			entites.forEach (entity) =>
+			entities.forEach (entity) =>
 				@buildTableLine(entity, entityType, tbody)
 		else
 			table.append "There are not instances"
@@ -36,21 +36,28 @@ class ListingTable extends EntitySetWidget
 		trbody = $("<tr>")
 		trbody.attr "id", "instance_" + entity.id
 		tbody.append trbody
-		entityType.properties.forEach (property) =>
+		entityType.propertiesType.forEach (propertyType) =>
 			td  = $("<td>");
-			td.attr "id", "entity_" + entity.id + "_property_" + property.name
-			td.append entity[property.name]
+			td.attr "id", "entity_" + entity.id + "_property_" + propertyType.name
+			widget = RederingEngine.getWidget entityType, propertyType.type, 'property'
+			widget.render td, propertyType, entity[propertyType.name]
 			trbody.append td
 		
 		deleteButton = $("<button>")
 		deleteButton.append "Delete"
+		self = this
 		deleteButton.on "click", ->
-  			DataManager.deleteEntity entityType.resource, entity.id, (data) =>
-  				RederingEngine.peformContext(View.emptyPage(), entityType, 'root')
-  			,(status) =>
-  				alert("Ocorreu algum erro " + status)
-  		td  = $("<td>");
-  		td.append deleteButton
-  		trbody.append td
+			DataManager.deleteEntity entityType.resource, entity.id, (data) =>
+				 self.reloadData(entityType)
+			,(status) =>
+				alert("Ocorreu algum erro " + status)
+		td  = $("<td>");
+		td.append deleteButton
+		trbody.append td
+
+	reloadData: (entityType) ->
+		DataManager.getEntities entityType.resource, (entities) =>
+			$("tbody").empty() 
+			@buildTableBody(entityType, entities, @table)
 
 return new ListingTable
