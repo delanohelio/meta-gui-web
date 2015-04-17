@@ -6,16 +6,20 @@
 
   RulesManager.downloadAllRules = function() {
     var _this = this;
-    return $.getJSON('http://localhost:8081/rules', function(rules) {
+    return $.getJSON(HOST + 'rules', function(rules) {
       return rules.forEach(function(rule) {
-        return simpleStorage.set(RulesManager.STORAGE_TAG + rule.providedContext.name + rule.propertyTypeTypeLocator, rule);
+        var key;
+        key = RulesManager.STORAGE_TAG + rule.providedContextName;
+        if (rule.propertyTypeTypeLocator !== null) {
+          key += rule.propertyTypeTypeLocator;
+        }
+        return simpleStorage.set(key, rule);
       });
     });
   };
 
   RulesManager.getRule = function(context, propertyTypeTypeLocator) {
     var rule;
-    console.log("opa");
     rule = simpleStorage.get(RulesManager.STORAGE_TAG + context + propertyTypeTypeLocator);
     if (typeof rule === "undefined") {
       rule = simpleStorage.get(RulesManager.STORAGE_TAG + context);

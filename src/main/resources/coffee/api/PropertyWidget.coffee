@@ -1,4 +1,4 @@
-class window.PropertyWidget extends Widget
+class window.PropertyWidget
 
 	render: (view, propertyType, property) ->
 		

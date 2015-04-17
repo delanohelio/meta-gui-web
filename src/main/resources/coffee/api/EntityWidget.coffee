@@ -1,4 +1,4 @@
-class window.EntityWidget extends Widget
+class window.EntityWidget
 
 	render: (view, entityType, entity) ->
 		

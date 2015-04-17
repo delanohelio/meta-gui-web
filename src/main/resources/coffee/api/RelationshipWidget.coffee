@@ -1,4 +1,4 @@
-class window.RelationshipWidget extends Widget
+class window.RelationshipWidget
 
 	render: (view, relationType, relation) ->
 		

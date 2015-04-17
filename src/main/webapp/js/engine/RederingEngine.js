@@ -4,20 +4,6 @@
 
   window.RederingEngine = {};
 
-  RederingEngine.downloadWidgets = function() {
-    var _this = this;
-    return $.getJSON('http://localhost:8081/widgets', function(json) {
-      return alert(json);
-    });
-  };
-
-  RederingEngine.loadData = function(url, callback) {
-    var _this = this;
-    return $.getJSON('http://localhost:8081/' + url, function(json) {
-      return callback(json);
-    });
-  };
-
   RederingEngine.openApp = function(view) {
     var _this = this;
     return WidgetManager.getRootRenderer(function(rootRenderer) {
@@ -30,12 +16,14 @@
   RederingEngine.getWidget = function(entityType, propertyTypeType, context) {
     var rule, widget;
     rule = RulesManager.getRule(context, propertyTypeType);
-    widget = eval(rule.widget.code);
+    widget = WidgetManager.getWidget(rule.widgetID, rule.widgetVersion);
+    widget.configuration = $.parseJSON(rule.configuration);
     return widget;
   };
 
   $(function() {
     RulesManager.downloadAllRules();
+    WidgetManager.downloadAllWidgets();
     return RederingEngine.openApp(View.emptyPage());
   });
 

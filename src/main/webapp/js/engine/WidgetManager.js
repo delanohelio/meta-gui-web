@@ -2,34 +2,26 @@
 
   window.WidgetManager = {};
 
-  WidgetManager.loadScript = function(type, url, callback) {
+  WidgetManager.STORAGE_TAG = "WIDGETS";
+
+  WidgetManager.downloadAllWidgets = function() {
     var _this = this;
-    return $.getJSON('api/' + type + '/' + url, function(json) {
-      var guiElement;
-      guiElement = eval(json.script);
-      guiElement.id = json.id;
-      return callback(guiElement);
+    return $.getJSON(HOST + 'widgets', function(widgetsSpec) {
+      return widgetsSpec.forEach(function(widgetSpec) {
+        return simpleStorage.set(WidgetManager.STORAGE_TAG + widgetSpec.id + widgetSpec.version, widgetSpec);
+      });
     });
   };
 
-  WidgetManager.loadRenderer = function(url, callback) {
-    return WidgetManager.loadScript('renderer', url, callback);
-  };
-
-  WidgetManager.loadWidget = function(url, callback) {
-    return WidgetManager.loadScript('widget', url, callback);
-  };
-
-  WidgetManager.getRendererEntity = function(entity, callback) {
-    return WidgetManager.loadRenderer('entity/' + entity.fullName, callback);
-  };
-
-  WidgetManager.getRendererAttribute = function(entity, attribute, callback) {
-    return WidgetManager.loadRenderer('entity/' + entity.fullName + '/' + attribute.name, callback);
-  };
-
-  WidgetManager.getWidget = function(renderer, hook, callback) {
-    return WidgetManager.loadWidget(renderer.id + '/' + hook, callback);
+  WidgetManager.getWidget = function(id, version) {
+    var widget, widgetSpec;
+    widgetSpec = simpleStorage.get(WidgetManager.STORAGE_TAG + id + version);
+    widget = eval(widgetSpec.code);
+    widget.id = widgetSpec.id;
+    widget.version = widgetSpec.version;
+    widget.name = widgetSpec.name;
+    widget.type = widgetSpec.type;
+    return widget;
   };
 
   WidgetManager.getRootRenderer = function(callback) {
