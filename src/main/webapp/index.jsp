@@ -14,9 +14,9 @@
 	<script src="js/engine/DataManager.js" type="text/javascript"></script>
 	<script src="js/engine/RulesManager.js" type="text/javascript"></script>
 	<script src="js/engine/RederingEngine.js" type="text/javascript"></script>
-	
-	<script src="js/api/Widget.js" type="text/javascript"></script>
+
 	<script src="js/api/EntitySetWidget.js" type="text/javascript"></script>
+	<script src="js/api/EntityWidget.js" type="text/javascript"></script>
 	<script src="js/api/PropertyWidget.js" type="text/javascript"></script>
 
 </head>

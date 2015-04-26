@@ -21,6 +21,35 @@
     return DataManager.loadData('api/' + entityTypeResource, callback);
   };
 
+  DataManager.createEntity = function(entityTypeResource, entity, success, error) {
+    return $.ajax({
+      url: HOST + "api/" + entityTypeResource,
+      type: "POST",
+      data: JSON.stringify(entity),
+      contentType: "application/json; charset=utf-8",
+      error: function(jqXHR, textStatus, errorThrown) {
+        return error(textStatus);
+      },
+      success: function(data, textStatus, jqXHR) {
+        return success(data);
+      }
+    });
+  };
+
+  DataManager.updateEntity = function(entityTypeResource, entity, success, error) {
+    return $.ajax({
+      url: HOST + "api/" + entityTypeResource + "/" + entity.id,
+      type: "PUT",
+      data: JSON.stringify(entity),
+      error: function(jqXHR, textStatus, errorThrown) {
+        return error(textStatus);
+      },
+      success: function(data, textStatus, jqXHR) {
+        return success(data);
+      }
+    });
+  };
+
   DataManager.deleteEntity = function(entityTypeResource, entityID, success, error) {
     return $.ajax({
       url: HOST + "api/" + entityTypeResource + "/" + entityID,
