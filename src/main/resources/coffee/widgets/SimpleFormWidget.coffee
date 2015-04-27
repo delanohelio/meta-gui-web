@@ -1,6 +1,14 @@
 class SimpleFormWidget extends EntityWidget
 
-	render: (view, entityType, entity) ->
+	render: (view) ->
+		self = this
+		if(@entityID)
+			DataManager.getEntity @entityType.resource, @entityID, (entity) =>
+				self.draw(view, self.entityType, entity)
+		else
+			self.draw(view, @entityType)
+
+	draw: (view, entityType, entity) ->
 		title = $("<h2>")
 		title.append entityType.name
 		view.append title
@@ -31,27 +39,27 @@ class SimpleFormWidget extends EntityWidget
 			submitButton.click ->
 				newEntityValues = self.getEntityValuesFromInput(entityType)
 				newEntityValues["id"] = entity.id
-				DataManager.updateEntity entityType.resource, newEntityValues
+				DataManager.updateEntity(entityType.resource, newEntityValues)
+				.done =>
+					RenderingEngine.popAndRender View.emptyPage()
+				.fail =>
+					alert("Error")
 		else
 			submitButton.append "Create"
 			submitButton.click ->
 				newEntityValues = self.getEntityValuesFromInput(entityType)
-				DataManager.createEntity entityType.resource, newEntityValues
+				DataManager.createEntity(entityType.resource, newEntityValues)
+				.done =>
+					RenderingEngine.popAndRender View.emptyPage()
+				.fail =>
+					alert("Error")
 		view.append submitButton
 
 	getEntityValuesFromInput: (entityType) ->
 		entity = {}
 		entityType.propertiesType.forEach (property) ->
 			if(property.name != "id")
-				value = $("#" + entityType.resource + "_" + property.name).val()
-				if(value && property.type == "int")
-					value = parseInt(value)
-				else if(value && property.type == "real")
-					value = parseFloat(value)
-				else if(value && property.type == "date")
-					value = new Date(value)
-				else if(value)
-					entity[property.name] = value
+				entity[property.name] = $("#" + entityType.resource + "_" + property.name).value()
 		entity 
 
 return new SimpleFormWidget

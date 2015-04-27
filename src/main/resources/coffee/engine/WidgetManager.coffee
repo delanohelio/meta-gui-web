@@ -6,6 +6,10 @@ WidgetManager.downloadAllWidgets = () ->
 	$.getJSON HOST + 'widgets', (widgetsSpec) =>
 		widgetsSpec.forEach (widgetSpec) =>
 			simpleStorage.set(WidgetManager.STORAGE_TAG + widgetSpec.id + widgetSpec.version, widgetSpec)
+			widget = eval widgetSpec.code
+			if(widget.require && !window[widget.require.name])
+				$.getScript widget.require.url
+
 
 WidgetManager.getWidget = (id, version) ->
 	widgetSpec = simpleStorage.get(WidgetManager.STORAGE_TAG + id + version)

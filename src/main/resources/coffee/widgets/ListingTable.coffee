@@ -1,7 +1,8 @@
 class ListingTable extends EntitySetWidget
 
-	render: (view, entityType, entities) ->
-		@drawTable(entityType, entities, view)
+	render: (view) ->
+		DataManager.getEntities @entityType.resource, (entities) =>
+			@drawTable(@entityType, entities, view)
 
 	drawTable: (entityType, entities, view) ->
 		title = $("<h2>")
@@ -10,8 +11,10 @@ class ListingTable extends EntitySetWidget
 		addButton = $("<button>")
 		addButton.append "Add"
 		addButton.click =>
-			formWidget = RederingEngine.getWidget entityType, null, 'form'
-			formWidget.render View.emptyPage(), entityType
+			formWidget = RenderingEngine.getWidget entityType, null, 'form'
+			formWidget.entityType = entityType
+			RenderingEngine.pushWidget this
+			formWidget.render View.emptyPage()
 		view.append addButton
 		@table = $("<table>")
 		view.append @table
@@ -45,15 +48,20 @@ class ListingTable extends EntitySetWidget
 		entityType.propertiesType.forEach (propertyType) =>
 			td  = $("<td>");
 			td.attr "id", "entity_" + entity.id + "_property_" + propertyType.name
-			widget = RederingEngine.getWidget entityType, propertyType.type, 'property'
-			widget.render td, propertyType, entity[propertyType.name]
+			widget = RenderingEngine.getWidget entityType, propertyType.type, 'property'
+			widget.propertyType = propertyType
+			widget.property = entity[propertyType.name] 
+			widget.render td
 			trbody.append td
 		
 		editButton = $("<button>")
 		editButton.append "Edit"
 		editButton.click =>
-			formWidget = RederingEngine.getWidget entityType, null, 'form'
-			formWidget.render View.emptyPage(), entityType, entity
+			formWidget = RenderingEngine.getWidget entityType, null, 'form'
+			formWidget.entityType = entityType
+			formWidget.entityID = entity.id
+			RenderingEngine.pushWidget this
+			formWidget.render View.emptyPage()
 		td  = $("<td>");
 		td.append editButton
 		trbody.append td
@@ -61,18 +69,15 @@ class ListingTable extends EntitySetWidget
 		deleteButton = $("<button>")
 		deleteButton.append "Delete"
 		self = this
-		deleteButton.on "click", ->
-			DataManager.deleteEntity entityType.resource, entity.id, (data) =>
-				 self.reloadData(entityType)
-			,(status) =>
-				alert("Ocorreu algum erro " + status)
+		deleteButton.click ->
+			DataManager.deleteEntity(entityType.resource, entity.id)
+			.done (data, textStatus, jqXHR) =>
+				
+				self.render(View.emptyPage(), entityType)
+			.fail (jqXHR, textStatus, errorThrown) =>
+				alert("Ocorreu o erro: " + status)
 		td  = $("<td>");
 		td.append deleteButton
 		trbody.append td
-
-	reloadData: (entityType) ->
-		DataManager.getEntities entityType.resource, (entities) =>
-			$("tbody").empty() 
-			@buildTableBody(entityType, entities, @table)
 
 return new ListingTable

@@ -8,7 +8,12 @@
     var _this = this;
     return $.getJSON(HOST + 'widgets', function(widgetsSpec) {
       return widgetsSpec.forEach(function(widgetSpec) {
-        return simpleStorage.set(WidgetManager.STORAGE_TAG + widgetSpec.id + widgetSpec.version, widgetSpec);
+        var widget;
+        simpleStorage.set(WidgetManager.STORAGE_TAG + widgetSpec.id + widgetSpec.version, widgetSpec);
+        widget = eval(widgetSpec.code);
+        if (widget.require && !window[widget.require.name]) {
+          return $.getScript(widget.require.url);
+        }
       });
     });
   };

@@ -6,14 +6,13 @@
 	<title>Meta-GUI-Web</title>
 
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="js/engine/moment.js" type="text/javascript"></script>
-	<script src="js/engine/simpleStorage.js" type="text/javascript"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="js/engine/RootRenderer.js" type="text/javascript"></script>
 	<script src="js/engine/View.js" type="text/javascript"></script>
 	<script src="js/engine/WidgetManager.js" type="text/javascript"></script>
 	<script src="js/engine/DataManager.js" type="text/javascript"></script>
 	<script src="js/engine/RulesManager.js" type="text/javascript"></script>
-	<script src="js/engine/RederingEngine.js" type="text/javascript"></script>
+	<script src="js/engine/RenderingEngine.js" type="text/javascript"></script>
 
 	<script src="js/api/EntitySetWidget.js" type="text/javascript"></script>
 	<script src="js/api/EntityWidget.js" type="text/javascript"></script>

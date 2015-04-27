@@ -25,11 +25,10 @@
       table.append(tr);
       return tr.click(function() {
         var widget;
-        widget = RederingEngine.getWidget(entityType, null, 'root');
+        widget = RenderingEngine.getWidget(entityType, null, 'root');
         return DataManager.getEntityType(entityType.id, function(entityTypeFull) {
-          return DataManager.getEntities(entityTypeFull.resource, function(entities) {
-            return widget.render(View.emptyPage(), entityTypeFull, entities);
-          });
+          widget.entityType = entityTypeFull;
+          return widget.render(View.emptyPage());
         });
       });
     };

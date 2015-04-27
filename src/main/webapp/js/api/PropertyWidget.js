@@ -4,7 +4,7 @@
 
     function PropertyWidget() {}
 
-    PropertyWidget.prototype.render = function(view, propertyType, property) {};
+    PropertyWidget.prototype.render = function(view) {};
 
     return PropertyWidget;
 

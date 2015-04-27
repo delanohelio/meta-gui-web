@@ -1,6 +1,9 @@
 class DateFormatterWidget extends PropertyWidget
 
-	render: (view, propertyType, property) ->
-		view.append moment(new Date(property)).format(@configuration.format)
+	render: (view) ->
+		format = "yy-mm-dd" 
+		if(@configuration.format)
+			format = @configuration.format
+		view.append $.datepicker.formatDate(format, new Date(@property))
 
 return new DateFormatterWidget

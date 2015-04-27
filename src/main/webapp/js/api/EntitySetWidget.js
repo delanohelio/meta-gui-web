@@ -4,7 +4,7 @@
 
     function EntitySetWidget() {}
 
-    EntitySetWidget.prototype.render = function(view, entityType, entities) {};
+    EntitySetWidget.prototype.render = function(view) {};
 
     return EntitySetWidget;
 
