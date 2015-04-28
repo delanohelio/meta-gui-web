@@ -14,30 +14,32 @@ class SimpleFormWidget extends EntityWidget
 		view.append title
 		table = $("<table>")
 		view.append table
-		entityType.propertiesType.forEach (property) ->
-			if(property.name != "id")
+		widgets = []
+		entityType.propertiesType.forEach (propertyType) ->
+			if(propertyType.name != "id")
 				tr = $("<tr>")
 				
 				td  = $("<td>");
-				td.append property.name
+				td.append propertyType.name
 				tr.append td
 				
 				td  = $("<td>");
-				textField = $("<input>")
-				textField.attr "id", entityType.resource + "_" + property.name
+				widget = RenderingEngine.getWidget entityType, propertyType.type, 'field'
+				widget.propertyType = propertyType
 				if(entity)
-					textField.val(entity[property.name])
-				
-				td.append textField
+					widget.property = entity[propertyType.name] 
+				widget.render td
+				widgets.push(widget)
 				tr.append td
 				
 				view.append tr
+		@widgets = widgets
 		submitButton = $("<button>")
 		self = this
 		if(entity)
 			submitButton.append "Update"
 			submitButton.click ->
-				newEntityValues = self.getEntityValuesFromInput(entityType)
+				newEntityValues = self.getEntityValuesFromInput()
 				newEntityValues["id"] = entity.id
 				DataManager.updateEntity(entityType.resource, newEntityValues)
 				.done =>
@@ -47,7 +49,7 @@ class SimpleFormWidget extends EntityWidget
 		else
 			submitButton.append "Create"
 			submitButton.click ->
-				newEntityValues = self.getEntityValuesFromInput(entityType)
+				newEntityValues = self.getEntityValuesFromInput()
 				DataManager.createEntity(entityType.resource, newEntityValues)
 				.done =>
 					RenderingEngine.popAndRender View.emptyPage()
@@ -55,11 +57,10 @@ class SimpleFormWidget extends EntityWidget
 					alert("Error")
 		view.append submitButton
 
-	getEntityValuesFromInput: (entityType) ->
+	getEntityValuesFromInput: () ->
 		entity = {}
-		entityType.propertiesType.forEach (property) ->
-			if(property.name != "id")
-				entity[property.name] = $("#" + entityType.resource + "_" + property.name).value()
+		@widgets.forEach (widget) ->
+			widget.injectValue(entity)
 		entity 
 
 return new SimpleFormWidget

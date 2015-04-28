@@ -12,28 +12,32 @@
     }
 
     SimpleTextFieldProperty.prototype.render = function(view) {
-      var textField, value,
-        _this = this;
-      textField = $("<input>");
-      textField.attr("id", this.propertyType.name);
-      value = this.property;
-      if (this.propertyType.type === "date") {
-        value = $.datepicker.formatDate("yy-mm-dd", new Date(this.property));
+      var value;
+      this.textField = $("<input>");
+      this.textField.attr("id", this.propertyType.name);
+      if (this.property) {
+        value = this.property;
+        if (this.propertyType.type === "date") {
+          value = $.datepicker.formatDate("yy-mm-dd", new Date(this.property));
+        }
+        this.textField.val(value);
       }
-      textField.val(value);
-      textField.value(function() {
-        if (_this.propertyType.type === "integer") {
-          return parseInt(textField.val());
-        }
-        if (_this.propertyType.type === "real") {
-          return parseFloat(textField.val());
-        }
-        if (_this.propertyType.type === "date") {
-          return new Date(textField.val());
-        }
-        return textField.val();
-      });
-      return view.append(textField);
+      return view.append(this.textField);
+    };
+
+    SimpleTextFieldProperty.prototype.injectValue = function(entity) {
+      var value;
+      value = this.textField.val();
+      if (this.propertyType.type === "integer") {
+        value = parseInt(value);
+      }
+      if (this.propertyType.type === "real") {
+        value = parseFloat(value);
+      }
+      if (this.propertyType.type === "date") {
+        value = new Date(value);
+      }
+      return entity[this.propertyType.name] = value;
     };
 
     return SimpleTextFieldProperty;

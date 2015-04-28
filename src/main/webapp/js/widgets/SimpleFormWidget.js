@@ -25,30 +25,33 @@
     };
 
     SimpleFormWidget.prototype.draw = function(view, entityType, entity) {
-      var self, submitButton, table, title;
+      var self, submitButton, table, title, widgets;
       title = $("<h2>");
       title.append(entityType.name);
       view.append(title);
       table = $("<table>");
       view.append(table);
-      entityType.propertiesType.forEach(function(property) {
-        var td, textField, tr;
-        if (property.name !== "id") {
+      widgets = [];
+      entityType.propertiesType.forEach(function(propertyType) {
+        var td, tr, widget;
+        if (propertyType.name !== "id") {
           tr = $("<tr>");
           td = $("<td>");
-          td.append(property.name);
+          td.append(propertyType.name);
           tr.append(td);
           td = $("<td>");
-          textField = $("<input>");
-          textField.attr("id", entityType.resource + "_" + property.name);
+          widget = RenderingEngine.getWidget(entityType, propertyType.type, 'field');
+          widget.propertyType = propertyType;
           if (entity) {
-            textField.val(entity[property.name]);
+            widget.property = entity[propertyType.name];
           }
-          td.append(textField);
+          widget.render(td);
+          widgets.push(widget);
           tr.append(td);
           return view.append(tr);
         }
       });
+      this.widgets = widgets;
       submitButton = $("<button>");
       self = this;
       if (entity) {
@@ -56,7 +59,7 @@
         submitButton.click(function() {
           var newEntityValues,
             _this = this;
-          newEntityValues = self.getEntityValuesFromInput(entityType);
+          newEntityValues = self.getEntityValuesFromInput();
           newEntityValues["id"] = entity.id;
           return DataManager.updateEntity(entityType.resource, newEntityValues).done(function() {
             return RenderingEngine.popAndRender(View.emptyPage());
@@ -69,7 +72,7 @@
         submitButton.click(function() {
           var newEntityValues,
             _this = this;
-          newEntityValues = self.getEntityValuesFromInput(entityType);
+          newEntityValues = self.getEntityValuesFromInput();
           return DataManager.createEntity(entityType.resource, newEntityValues).done(function() {
             return RenderingEngine.popAndRender(View.emptyPage());
           }).fail(function() {
@@ -80,13 +83,11 @@
       return view.append(submitButton);
     };
 
-    SimpleFormWidget.prototype.getEntityValuesFromInput = function(entityType) {
+    SimpleFormWidget.prototype.getEntityValuesFromInput = function() {
       var entity;
       entity = {};
-      entityType.propertiesType.forEach(function(property) {
-        if (property.name !== "id") {
-          return entity[property.name] = $("#" + entityType.resource + "_" + property.name).value();
-        }
+      this.widgets.forEach(function(widget) {
+        return widget.injectValue(entity);
       });
       return entity;
     };

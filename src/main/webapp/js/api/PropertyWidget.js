@@ -6,6 +6,8 @@
 
     PropertyWidget.prototype.render = function(view) {};
 
+    PropertyWidget.prototype.injectValue = function(entity) {};
+
     return PropertyWidget;
 
   })();

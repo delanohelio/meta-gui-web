@@ -14,7 +14,7 @@
     DateFormatterWidget.prototype.render = function(view) {
       var format;
       format = "yy-mm-dd";
-      if (this.configuration.format) {
+      if (this.configuration) {
         format = this.configuration.format;
       }
       return view.append($.datepicker.formatDate(format, new Date(this.property)));
