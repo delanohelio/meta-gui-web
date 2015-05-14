@@ -32,7 +32,7 @@
       table = $("<table>");
       view.append(table);
       widgets = [];
-      entityType.propertiesType.forEach(function(propertyType) {
+      entityType.propertyTypes.forEach(function(propertyType) {
         var td, tr, widget;
         if (propertyType.name !== "id") {
           tr = $("<tr>");
@@ -40,7 +40,7 @@
           td.append(propertyType.name);
           tr.append(td);
           td = $("<td>");
-          widget = RenderingEngine.getWidget(entityType, propertyType.type, 'field');
+          widget = RenderingEngine.getPropertyWidget('field', entityType, propertyType);
           widget.propertyType = propertyType;
           if (entity) {
             widget.property = entity[propertyType.name];

@@ -11,14 +11,14 @@ class ListingTable extends EntitySetWidget
 		addButton = $("<button>")
 		addButton.append "Add"
 		addButton.click =>
-			formWidget = RenderingEngine.getWidget entityType, null, 'form'
+			formWidget = RenderingEngine.getEntityWidget 'form', entityType
 			formWidget.entityType = entityType
 			RenderingEngine.pushWidget this
 			formWidget.render View.emptyPage()
 		view.append addButton
 		@table = $("<table>")
 		view.append @table
-		@buildTableHead(entityType.propertiesType, @table);
+		@buildTableHead(entityType.propertyTypes, @table);
 		@buildTableBody(entityType, entities, @table)
 
 	buildTableHead: (properties, table) ->
@@ -45,10 +45,10 @@ class ListingTable extends EntitySetWidget
 		trbody = $("<tr>")
 		trbody.attr "id", "instance_" + entity.id
 		tbody.append trbody
-		entityType.propertiesType.forEach (propertyType) =>
+		entityType.propertyTypes.forEach (propertyType) =>
 			td  = $("<td>");
 			td.attr "id", "entity_" + entity.id + "_property_" + propertyType.name
-			widget = RenderingEngine.getWidget entityType, propertyType.type, 'property'
+			widget = RenderingEngine.getPropertyWidget 'property', entityType, propertyType 
 			widget.propertyType = propertyType
 			widget.property = entity[propertyType.name] 
 			widget.render td
@@ -57,7 +57,7 @@ class ListingTable extends EntitySetWidget
 		editButton = $("<button>")
 		editButton.append "Edit"
 		editButton.click =>
-			formWidget = RenderingEngine.getWidget entityType, null, 'form'
+			formWidget = RenderingEngine.getEntityWidget 'form', entityType
 			formWidget.entityType = entityType
 			formWidget.entityID = entity.id
 			RenderingEngine.pushWidget this

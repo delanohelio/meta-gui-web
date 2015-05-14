@@ -14,7 +14,7 @@ class window.RootRenderer
 		tr.attr "id", "entityType_" + entityType.name
 		table.append tr
 		tr.click =>
-			widget = RenderingEngine.getWidget entityType, null, 'root'
+			widget = RenderingEngine.getEntitySetWidget 'root', entityType 
 			DataManager.getEntityType entityType.id, (entityTypeFull) =>
 				widget.entityType = entityTypeFull
 				widget.render View.emptyPage()

@@ -25,7 +25,7 @@
       table.append(tr);
       return tr.click(function() {
         var widget;
-        widget = RenderingEngine.getWidget(entityType, null, 'root');
+        widget = RenderingEngine.getEntitySetWidget('root', entityType);
         return DataManager.getEntityType(entityType.id, function(entityTypeFull) {
           widget.entityType = entityTypeFull;
           return widget.render(View.emptyPage());

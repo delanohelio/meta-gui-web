@@ -1,4 +1,5 @@
 (function() {
+  var _this = this;
 
   window.HOST = 'http://localhost:8081/';
 
@@ -23,12 +24,28 @@
     });
   };
 
-  RenderingEngine.getWidget = function(entityType, propertyTypeType, context) {
+  RenderingEngine.getWidget = function(contextName, contextType, entityType, propertyType, propertyTypeType, relationshipTargetCardinality) {
     var rule, widget;
-    rule = RulesManager.getRule(context, propertyTypeType);
-    widget = WidgetManager.getWidget(rule.widgetID, rule.widgetVersion);
+    rule = RulesManager.getRule(contextName, contextType, entityType, propertyType, propertyTypeType, relationshipTargetCardinality);
+    widget = WidgetManager.getWidget(rule.widget.id, rule.widget.version);
     widget.configuration = $.parseJSON(rule.configuration);
     return widget;
+  };
+
+  RenderingEngine.geRelationshipWidget = function(context, entityType, propertyType, relationshipTargetCardinality) {
+    return RenderingEngine.getWidget(context, 'Relationship', entityType, propertyType, propertyTypeType, null);
+  };
+
+  RenderingEngine.getPropertyWidget = function(context, entityType, propertyType) {
+    return RenderingEngine.getWidget(context, 'Property', entityType, propertyType.name, propertyType.type, null);
+  };
+
+  RenderingEngine.getEntityWidget = function(context, entityType) {
+    return RenderingEngine.getWidget(context, 'Entity', entityType.name, null, null, null);
+  };
+
+  RenderingEngine.getEntitySetWidget = function(context, entityType) {
+    return RenderingEngine.getWidget(context, 'Entity', entityType.name, null, null, null);
   };
 
   $(function() {

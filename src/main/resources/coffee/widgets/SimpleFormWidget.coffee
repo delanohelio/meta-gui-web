@@ -15,7 +15,7 @@ class SimpleFormWidget extends EntityWidget
 		table = $("<table>")
 		view.append table
 		widgets = []
-		entityType.propertiesType.forEach (propertyType) ->
+		entityType.propertyTypes.forEach (propertyType) ->
 			if(propertyType.name != "id")
 				tr = $("<tr>")
 				
@@ -24,7 +24,7 @@ class SimpleFormWidget extends EntityWidget
 				tr.append td
 				
 				td  = $("<td>");
-				widget = RenderingEngine.getWidget entityType, propertyType.type, 'field'
+				widget = RenderingEngine.getPropertyWidget 'field', entityType, propertyType 
 				widget.propertyType = propertyType
 				if(entity)
 					widget.property = entity[propertyType.name] 
