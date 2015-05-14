@@ -2,6 +2,12 @@ window.HOST = 'http://localhost:8081/'
 window.RenderingEngine = {}
 window.WidgetStack = []
 
+Date.prototype.toISO8601 = () =>
+	`this.toISOString().slice(0, 19) + 'Z'`
+
+Date.prototype.toJSON = () =>
+	`this.toISO8601()`
+
 RenderingEngine.pushWidget = (widget) ->
 	WidgetStack.push(widget)
 

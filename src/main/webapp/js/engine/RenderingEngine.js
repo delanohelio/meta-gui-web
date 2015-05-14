@@ -7,6 +7,14 @@
 
   window.WidgetStack = [];
 
+  Date.prototype.toISO8601 = function() {
+    return this.toISOString().slice(0, 19) + 'Z';
+  };
+
+  Date.prototype.toJSON = function() {
+    return this.toISO8601();
+  };
+
   RenderingEngine.pushWidget = function(widget) {
     return WidgetStack.push(widget);
   };
