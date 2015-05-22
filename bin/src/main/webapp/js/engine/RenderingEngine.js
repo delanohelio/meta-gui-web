@@ -8,9 +8,8 @@
   window.WidgetStack = [];
 
   Date.prototype.toISO8601 = function() {
-    self = this;
-    if (!isNaN(self)) {
-      return self.toISOString().slice(0, 19) + 'Z';
+    if (!isNaN(_this)) {
+      return this.toISOString().slice(0, 19) + 'Z';
     }
   };
 

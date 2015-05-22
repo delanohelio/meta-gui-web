@@ -3,9 +3,8 @@ window.RenderingEngine = {}
 window.WidgetStack = []
 
 Date.prototype.toISO8601 = () =>
-	`self = this`
-	if(!isNaN(self))
-		`self.toISOString().slice(0, 19) + 'Z'`
+	if(!isNaN(this))
+		`this.toISOString().slice(0, 19) + 'Z'`
 
 Date.prototype.toJSON = () =>
 	`this.toISO8601()`
