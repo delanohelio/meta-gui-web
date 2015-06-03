@@ -62,9 +62,11 @@
   $(function() {
     var _this = this;
     return $.getScript("https://dl.dropboxusercontent.com/u/14874989/Mestrado/metaguiweb/js/simpleStorage.js", function() {
-      RulesManager.downloadAllRules();
-      WidgetManager.downloadAllWidgets();
-      return RenderingEngine.openApp(View.emptyPage());
+      return $.getScript("https://dl.dropboxusercontent.com/u/14874989/mestrado/metaguiweb/js/jquery.mask.min.js", function() {
+        RulesManager.downloadAllRules();
+        WidgetManager.downloadAllWidgets();
+        return RenderingEngine.openApp(View.emptyPage());
+      });
     });
   });
 

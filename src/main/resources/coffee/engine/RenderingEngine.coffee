@@ -41,6 +41,7 @@ RenderingEngine.getEntitySetWidget = (context, entityType) =>
 
 $ ->
 	$.getScript "https://dl.dropboxusercontent.com/u/14874989/Mestrado/metaguiweb/js/simpleStorage.js", () =>
-		RulesManager.downloadAllRules()
-		WidgetManager.downloadAllWidgets()
-		RenderingEngine.openApp View.emptyPage()
+		$.getScript "https://dl.dropboxusercontent.com/u/14874989/mestrado/metaguiweb/js/jquery.mask.min.js", () =>
+			RulesManager.downloadAllRules()
+			WidgetManager.downloadAllWidgets()
+			RenderingEngine.openApp View.emptyPage()
