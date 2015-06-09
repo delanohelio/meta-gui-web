@@ -12,15 +12,19 @@
     }
 
     NumberFormatter.prototype.render = function(view) {
-      var format, textField;
       if (this.configuration.editable) {
-        textField = $("<input>");
-        textField.mask(this.configuration.format);
-        return textField.val(this.property);
+        this.textField = $("<input>");
+        this.textField.mask(this.configuration.format);
+        this.textField.val(this.property);
+        return view.append(this.textField);
       } else {
-        format = this.configuration.format;
-        return view.append(this.property);
+        view.append(this.property);
+        return view.mask(this.configuration.format);
       }
+    };
+
+    NumberFormatter.prototype.injectValue = function(entity) {
+      return entity[this.propertyType.name] = this.textField.cleanVal();
     };
 
     return NumberFormatter;
