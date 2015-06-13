@@ -43,12 +43,12 @@
     return widget;
   };
 
-  RenderingEngine.geRelationshipWidget = function(context, entityType, propertyType, relationshipTargetCardinality) {
-    return RenderingEngine.getWidget(context, 'Relationship', entityType, propertyType, propertyTypeType, null);
+  RenderingEngine.getRelationshipWidget = function(context, entityType, relationshipType) {
+    return RenderingEngine.getWidget(context, 'Relationship', entityType.name, relationshipType.name, relationshipType.targetType.name, relationshipType.targetCardinality);
   };
 
   RenderingEngine.getPropertyWidget = function(context, entityType, propertyType) {
-    return RenderingEngine.getWidget(context, 'Property', entityType, propertyType.name, propertyType.type, null);
+    return RenderingEngine.getWidget(context, 'Property', entityType.name, propertyType.name, propertyType.type, null);
   };
 
   RenderingEngine.getEntityWidget = function(context, entityType) {

@@ -1,13 +1,14 @@
 class ComboBoxWidget extends RelationshipWidget
 
 	render: (view) ->
-		@selectField = $("<select>")
+		selectField = $("<select>")
+		@selectField = selectField
 		view.append @selectField
-		DataManager.getEntities @relationType.targetType.resource, (entities) =>
+		DataManager.getEntities @relationshipType.targetType.resource, (entities) =>
 			entities.forEach (entity) ->
 				option = new Option(entity.id)
-				if(@configuration.propertyKey)
+				if(@configuration)
 					option = new Option(entity[@configuration.propertyKey], entity.id)
-				@selectField.add option
+				selectField.append option
 
 return new ComboBoxWidget

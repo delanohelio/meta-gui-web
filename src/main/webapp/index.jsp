@@ -17,6 +17,7 @@
 	<script src="js/api/EntitySetWidget.js" type="text/javascript"></script>
 	<script src="js/api/EntityWidget.js" type="text/javascript"></script>
 	<script src="js/api/PropertyWidget.js" type="text/javascript"></script>
+	<script src="js/api/RelationshipWidget.js" type="text/javascript"></script>
 
 </head>
 <body>

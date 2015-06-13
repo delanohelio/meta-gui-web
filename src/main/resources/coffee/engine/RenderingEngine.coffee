@@ -27,11 +27,11 @@ RenderingEngine.getWidget = (contextName, contextType, entityType, propertyType,
 	widget.configuration = $.parseJSON(rule.configuration)
 	widget
 
-RenderingEngine.geRelationshipWidget = (context, entityType, propertyType, relationshipTargetCardinality) =>
-	RenderingEngine.getWidget(context, 'Relationship', entityType, propertyType, propertyTypeType, null)
+RenderingEngine.getRelationshipWidget = (context, entityType, relationshipType) =>
+	RenderingEngine.getWidget(context, 'Relationship', entityType.name, relationshipType.name, relationshipType.targetType.name, relationshipType.targetCardinality)
 
 RenderingEngine.getPropertyWidget = (context, entityType, propertyType) =>
-	RenderingEngine.getWidget(context, 'Property', entityType, propertyType.name, propertyType.type, null)
+	RenderingEngine.getWidget(context, 'Property', entityType.name, propertyType.name, propertyType.type, null)
 
 RenderingEngine.getEntityWidget = (context, entityType) =>
 	RenderingEngine.getWidget(context, 'Entity', entityType.name, null, null, null)

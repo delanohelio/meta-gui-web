@@ -33,6 +33,23 @@ class SimpleFormWidget extends EntityWidget
 				tr.append td
 				
 				view.append tr
+		entityType.relationshipTypes.forEach (relationshipType) ->
+			tr = $("<tr>")
+			
+			td  = $("<td>");
+			td.append relationshipType.name
+			tr.append td
+			
+			td  = $("<td>");
+			widget = RenderingEngine.getRelationshipWidget 'fieldRelation', entityType, relationshipType 
+			widget.relationshipType = relationshipType
+			if(entity)
+				widget.relationship = entity[relationshipType.name] 
+			widget.render td
+			widgets.push(widget)
+			tr.append td
+			
+			view.append tr
 		@widgets = widgets
 		submitButton = $("<button>")
 		self = this
