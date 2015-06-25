@@ -12,26 +12,17 @@
     }
 
     ComboBoxWidget.prototype.render = function(view) {
-      var configuration, relationship, selectField,
-        _this = this;
+      var relationshipIds;
       this.selectField = $("<select>");
       view.append(this.selectField);
-      selectField = this.selectField;
-      configuration = this.configuration;
-      relationship = this.relationship;
-      return DataManager.getEntities(this.relationshipType.targetType.resource, function(entities) {
-        entities.forEach(function(entity) {
-          var option;
-          option = new Option(entity.id);
-          if (configuration) {
-            option = new Option(entity[configuration.propertyKey], entity.id);
-          }
-          return selectField.append(option);
-        });
-        if (relationship) {
-          return selectField[0].value = relationship.id;
-        }
-      });
+      if (this.relationship) {
+        relationshipIds = [this.relationship.id];
+      }
+      if (this.configuration) {
+        return this.populateSelectField(this.selectField, this.relationshipType.targetType.resource, this.configuration.propertyKey, relationshipIds);
+      } else {
+        return this.populateSelectField(this.selectField, this.relationshipType.targetType.resource, null, relationships);
+      }
     };
 
     ComboBoxWidget.prototype.injectValue = function(entity) {

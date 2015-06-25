@@ -3,20 +3,14 @@ class MultiSelectBoxWidget extends RelationshipWidget
 	render: (view) ->
 		@multiSelectField = $("<select multiple>")
 		view.append @multiSelectField
-		multiSelectField = @multiSelectField
-		configuration = @configuration
-		relationship = []
+		relationshipsIds = []
 		if(@relationship)
 			@relationship.forEach (entity) =>
-				relationship.push entity.id
-		DataManager.getEntities @relationshipType.targetType.resource, (entities) =>
-			entities.forEach (entity) ->
-				option = new Option(entity.id)
-				if(configuration)
-					option = new Option(entity[configuration.propertyKey], entity.id)
-				multiSelectField.append option
-				if(relationship.indexOf(entity.id) != -1)
-					option.selected = true 
+				relationshipsIds.push entity.id
+		if (@configuration)
+			@populateSelectField @multiSelectField, @relationshipType.targetType.resource, @configuration.propertyKey, relationshipsIds
+		else
+			@populateSelectField @multiSelectField, @relationshipType.targetType.resource, null, relationshipsIds
 	
 	injectValue: (entity) ->
 		value = []

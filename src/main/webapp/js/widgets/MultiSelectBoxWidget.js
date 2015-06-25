@@ -12,31 +12,21 @@
     }
 
     MultiSelectBoxWidget.prototype.render = function(view) {
-      var configuration, multiSelectField, relationship,
+      var relationshipsIds,
         _this = this;
       this.multiSelectField = $("<select multiple>");
       view.append(this.multiSelectField);
-      multiSelectField = this.multiSelectField;
-      configuration = this.configuration;
-      relationship = [];
+      relationshipsIds = [];
       if (this.relationship) {
         this.relationship.forEach(function(entity) {
-          return relationship.push(entity.id);
+          return relationshipsIds.push(entity.id);
         });
       }
-      return DataManager.getEntities(this.relationshipType.targetType.resource, function(entities) {
-        return entities.forEach(function(entity) {
-          var option;
-          option = new Option(entity.id);
-          if (configuration) {
-            option = new Option(entity[configuration.propertyKey], entity.id);
-          }
-          multiSelectField.append(option);
-          if (relationship.indexOf(entity.id) !== -1) {
-            return option.selected = true;
-          }
-        });
-      });
+      if (this.configuration) {
+        return this.populateSelectField(this.multiSelectField, this.relationshipType.targetType.resource, this.configuration.propertyKey, relationshipsIds);
+      } else {
+        return this.populateSelectField(this.multiSelectField, this.relationshipType.targetType.resource, null, relationshipsIds);
+      }
     };
 
     MultiSelectBoxWidget.prototype.injectValue = function(entity) {
