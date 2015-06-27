@@ -25,79 +25,49 @@
     };
 
     SimpleFormWidget.prototype.draw = function(view, entityType, entity) {
-      var self, submitButton, table, title, widgets;
+      var self, table, title;
       title = $("<h2>");
       title.append(entityType.name);
       view.append(title);
       table = $("<table>");
       view.append(table);
-      widgets = [];
+      this.widgets = [];
+      self = this;
       entityType.propertyTypes.forEach(function(propertyType) {
-        var td, tr, widget;
         if (propertyType.name !== "id") {
-          tr = $("<tr>");
-          td = $("<td>");
-          td.append(propertyType.name);
-          tr.append(td);
-          td = $("<td>");
-          widget = RenderingEngine.getPropertyWidget('field', entityType, propertyType);
-          widget.propertyType = propertyType;
-          if (entity) {
-            widget.property = entity[propertyType.name];
-          }
-          widget.render(td);
-          widgets.push(widget);
-          tr.append(td);
-          return view.append(tr);
+          return self.renderTableRow(view, entityType, entity, propertyType, false);
         }
       });
       entityType.relationshipTypes.forEach(function(relationshipType) {
-        var td, tr, widget;
-        tr = $("<tr>");
-        td = $("<td>");
-        td.append(relationshipType.name);
-        tr.append(td);
-        td = $("<td>");
-        widget = RenderingEngine.getRelationshipWidget('fieldRelation', entityType, relationshipType);
-        widget.relationshipType = relationshipType;
-        if (entity) {
-          widget.relationship = entity[relationshipType.name];
-        }
-        widget.render(td);
-        widgets.push(widget);
-        tr.append(td);
-        return view.append(tr);
+        return self.renderTableRow(view, entityType, entity, relationshipType, true);
       });
-      this.widgets = widgets;
-      submitButton = $("<button>");
-      self = this;
-      if (entity) {
-        submitButton.append("Update");
-        submitButton.click(function() {
-          var newEntityValues,
-            _this = this;
-          newEntityValues = self.getEntityValuesFromInput();
-          newEntityValues["id"] = entity.id;
-          return DataManager.updateEntity(entityType.resource, newEntityValues).done(function() {
-            return RenderingEngine.popAndRender(View.emptyPage());
-          }).fail(function() {
-            return alert("Error");
-          });
-        });
+      return this.renderSubmitButton(view, entityType.resource, entity);
+    };
+
+    SimpleFormWidget.prototype.renderTableRow = function(view, entityType, entity, metadata, isRelationship) {
+      var td, tr, widget;
+      tr = $("<tr>");
+      td = $("<td>");
+      td.append(metadata.name);
+      tr.append(td);
+      td = $("<td>");
+      if (isRelationship) {
+        widget = RenderingEngine.getRelationshipWidget('fieldRelation', entityType, metadata);
+        widget.relationshipType = metadata;
+        if (entity) {
+          widget.relationship = entity[metadata.name];
+        }
       } else {
-        submitButton.append("Create");
-        submitButton.click(function() {
-          var newEntityValues,
-            _this = this;
-          newEntityValues = self.getEntityValuesFromInput();
-          return DataManager.createEntity(entityType.resource, newEntityValues).done(function() {
-            return RenderingEngine.popAndRender(View.emptyPage());
-          }).fail(function() {
-            return alert("Error");
-          });
-        });
+        widget = RenderingEngine.getPropertyWidget('field', entityType, metadata);
+        widget.propertyType = metadata;
+        if (entity) {
+          widget.property = entity[metadata.name];
+        }
       }
-      return view.append(submitButton);
+      widget.render(td);
+      this.widgets.push(widget);
+      tr.append(td);
+      return view.append(tr);
     };
 
     SimpleFormWidget.prototype.getEntityValuesFromInput = function() {
@@ -107,6 +77,35 @@
         return widget.injectValue(entity);
       });
       return entity;
+    };
+
+    SimpleFormWidget.prototype.renderSubmitButton = function(view, resource, entity) {
+      var self, submitButton;
+      submitButton = $("<button>");
+      self = this;
+      if (entity) {
+        submitButton.append("Update");
+      } else {
+        submitButton.append("Create");
+      }
+      submitButton.click(function() {
+        var newEntityValues, request,
+          _this = this;
+        newEntityValues = self.getEntityValuesFromInput();
+        request = null;
+        if (entity) {
+          newEntityValues["id"] = entity.id;
+          request = DataManager.updateEntity(resource, newEntityValues);
+        } else {
+          request = DataManager.createEntity(resource, newEntityValues);
+        }
+        return request.done(function() {
+          return RenderingEngine.popAndRender(View.emptyPage());
+        }).fail(function() {
+          return alert("Error");
+        });
+      });
+      return view.append(submitButton);
     };
 
     return SimpleFormWidget;

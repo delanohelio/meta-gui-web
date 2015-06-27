@@ -1,8 +1,7 @@
 class DatePickerWidget extends PropertyWidget
 
 	render: (view) ->
-		@textField = $("<input>")
-		@textField.attr "id", @propertyType.name
+		@textField = @createInputElement()
 		if(@configuration)
 			@textField.datepicker({altFormat: @configuration.format})
 		else

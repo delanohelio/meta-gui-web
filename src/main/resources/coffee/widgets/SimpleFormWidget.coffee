@@ -14,70 +14,66 @@ class SimpleFormWidget extends EntityWidget
 		view.append title
 		table = $("<table>")
 		view.append table
-		widgets = []
+		@widgets = []
+		self = this
 		entityType.propertyTypes.forEach (propertyType) ->
 			if(propertyType.name != "id")
-				tr = $("<tr>")
-				
-				td  = $("<td>");
-				td.append propertyType.name
-				tr.append td
-				
-				td  = $("<td>");
-				widget = RenderingEngine.getPropertyWidget 'field', entityType, propertyType 
-				widget.propertyType = propertyType
-				if(entity)
-					widget.property = entity[propertyType.name] 
-				widget.render td
-				widgets.push(widget)
-				tr.append td
-				
-				view.append tr
+				self.renderTableRow view, entityType, entity, propertyType, false
 		entityType.relationshipTypes.forEach (relationshipType) ->
-			tr = $("<tr>")
-			
-			td  = $("<td>");
-			td.append relationshipType.name
-			tr.append td
-			
-			td  = $("<td>");
-			widget = RenderingEngine.getRelationshipWidget 'fieldRelation', entityType, relationshipType 
-			widget.relationshipType = relationshipType
+			self.renderTableRow view, entityType, entity, relationshipType, true
+		@renderSubmitButton(view, entityType.resource, entity)
+
+	renderTableRow: (view, entityType, entity, metadata, isRelationship) ->
+		tr = $("<tr>")
+		
+		td  = $("<td>");
+		td.append metadata.name
+		tr.append td
+		
+		td  = $("<td>");
+		
+		if(isRelationship)
+			widget = RenderingEngine.getRelationshipWidget 'fieldRelation', entityType, metadata
+			widget.relationshipType = metadata
 			if(entity)
-				widget.relationship = entity[relationshipType.name] 
-			widget.render td
-			widgets.push(widget)
-			tr.append td
-			
-			view.append tr
-		@widgets = widgets
-		submitButton = $("<button>")
-		self = this
-		if(entity)
-			submitButton.append "Update"
-			submitButton.click ->
-				newEntityValues = self.getEntityValuesFromInput()
-				newEntityValues["id"] = entity.id
-				DataManager.updateEntity(entityType.resource, newEntityValues)
-				.done =>
-					RenderingEngine.popAndRender View.emptyPage()
-				.fail =>
-					alert("Error")
+				widget.relationship = entity[metadata.name]
 		else
-			submitButton.append "Create"
-			submitButton.click ->
-				newEntityValues = self.getEntityValuesFromInput()
-				DataManager.createEntity(entityType.resource, newEntityValues)
-				.done =>
-					RenderingEngine.popAndRender View.emptyPage()
-				.fail =>
-					alert("Error")
-		view.append submitButton
+			widget = RenderingEngine.getPropertyWidget 'field', entityType, metadata
+			widget.propertyType = metadata
+			if(entity)
+				widget.property = entity[metadata.name]
+		
+		widget.render td
+		@widgets.push(widget)
+		tr.append td
+		
+		view.append tr
 
 	getEntityValuesFromInput: () ->
 		entity = {}
 		@widgets.forEach (widget) ->
 			widget.injectValue(entity)
-		entity 
+		entity
+
+	renderSubmitButton: (view, resource, entity) ->
+		submitButton = $("<button>")
+		self = this
+		if(entity)
+			submitButton.append "Update"
+		else
+			submitButton.append "Create"
+		submitButton.click ->
+			newEntityValues = self.getEntityValuesFromInput()
+			request = null
+			if(entity)
+				newEntityValues["id"] = entity.id
+				request = DataManager.updateEntity(resource, newEntityValues)
+			else
+				request = DataManager.createEntity(resource, newEntityValues)
+			request.done =>
+				RenderingEngine.popAndRender View.emptyPage()
+			.fail =>
+				alert("Error")
+		view.append submitButton
 
 return new SimpleFormWidget

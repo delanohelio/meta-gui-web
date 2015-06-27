@@ -12,8 +12,7 @@
     }
 
     DatePickerWidget.prototype.render = function(view) {
-      this.textField = $("<input>");
-      this.textField.attr("id", this.propertyType.name);
+      this.textField = this.createInputElement();
       if (this.configuration) {
         this.textField.datepicker({
           altFormat: this.configuration.format

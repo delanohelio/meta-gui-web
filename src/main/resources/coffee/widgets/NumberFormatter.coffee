@@ -3,8 +3,8 @@ class NumberFormatter extends PropertyWidget
 	render: (view) ->
 		if(@configuration.editable)
 			@textField = $("<input>")
-			@textField.mask(@configuration.format)
 			@textField.val(@property)
+			@textField.mask(@configuration.format)
 			view.append @textField
 		else
 			view.append @property

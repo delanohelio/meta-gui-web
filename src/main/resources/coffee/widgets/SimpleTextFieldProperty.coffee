@@ -1,8 +1,7 @@
 class SimpleTextFieldProperty extends PropertyWidget
 
 	render: (view) ->
-		@textField = $("<input>")
-		@textField.attr "id", @propertyType.name
+		@textField = @createInputElement()
 		
 		if(@property)
 			value = @property

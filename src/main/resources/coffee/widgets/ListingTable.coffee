@@ -8,13 +8,7 @@ class ListingTable extends EntitySetWidget
 		title = $("<h2>")
 		title.append entityType.name
 		view.append title 
-		addButton = $("<button>")
-		addButton.append "Add"
-		addButton.click =>
-			formWidget = RenderingEngine.getEntityWidget 'form', entityType
-			formWidget.entityType = entityType
-			RenderingEngine.pushWidget this
-			formWidget.render View.emptyPage()
+		addButton = @createButtonForm "Add", entityType
 		view.append addButton
 		@table = $("<table>")
 		view.append @table
@@ -54,14 +48,7 @@ class ListingTable extends EntitySetWidget
 			widget.render td
 			trbody.append td
 		
-		editButton = $("<button>")
-		editButton.append "Edit"
-		editButton.click =>
-			formWidget = RenderingEngine.getEntityWidget 'form', entityType
-			formWidget.entityType = entityType
-			formWidget.entityID = entity.id
-			RenderingEngine.pushWidget this
-			formWidget.render View.emptyPage()
+		editButton = @createButtonForm "Edit", entityType, entity
 		td  = $("<td>");
 		td.append editButton
 		trbody.append td
@@ -79,5 +66,17 @@ class ListingTable extends EntitySetWidget
 		td  = $("<td>");
 		td.append deleteButton
 		trbody.append td
+		
+	createButtonForm: (title, entityType, entity) =>
+		formButton = $("<button>")
+		formButton.append title
+		formButton.click =>
+			formWidget = RenderingEngine.getEntityWidget 'form', entityType
+			formWidget.entityType = entityType
+			if(entity)
+				formWidget.entityID = entity.id
+			RenderingEngine.pushWidget this
+			formWidget.render View.emptyPage()
+		formButton
 
 return new ListingTable

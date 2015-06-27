@@ -14,8 +14,8 @@
     NumberFormatter.prototype.render = function(view) {
       if (this.configuration.editable) {
         this.textField = $("<input>");
-        this.textField.mask(this.configuration.format);
         this.textField.val(this.property);
+        this.textField.mask(this.configuration.format);
         return view.append(this.textField);
       } else {
         view.append(this.property);
